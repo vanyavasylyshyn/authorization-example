@@ -2,6 +2,9 @@
   "name": "JWT_KOA_auth",
   "version": "1.0.0",
   "description": "JWT authentication in Koa Node.js framework",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
   "main": "",
   "dependencies": {
     "jsonwebtoken": "^7.3.0",
@@ -12,6 +15,7 @@
     "koa-router": "^7.0.1",
     "koa-static": "^3.0.0",
     "mongoose": "^4.9.0",
+    "nodemon": "^1.18.10",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0"
   }
