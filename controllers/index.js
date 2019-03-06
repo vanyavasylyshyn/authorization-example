@@ -86,9 +86,9 @@ async function checkLogin(ctx, next){
 
     await passport.authenticate('jwt', function (err, user) {
       if (user) {
-        ctx.body = "hello " + user.displayName;
+        ctx.body = true;
       } else {
-        ctx.body = "No such user";
+        ctx.body = false;
         console.log("err", err)
       }
     } )(ctx, next)
