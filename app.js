@@ -12,7 +12,7 @@ mongoose.set('debug', true);  // Ask Mongoose to log DB request to console
 mongoose.connect('mongodb://admin1:admin1@ds211865.mlab.com:11865/project',{useNewUrlParser: true}); // Connect to local database
 mongoose.connection.on('error', console.error);
 
-const port = 3000 || process.env.PORT;
+const port =  process.env.PORT;
 
 app.use(logger());
 app.use(bodyParser());
