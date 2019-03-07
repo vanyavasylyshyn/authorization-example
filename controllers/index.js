@@ -50,12 +50,28 @@ const jwtOptions = {
 
 async function createUser(ctx, next){
     try {
-      //let user = await User.findOne({email: ctx.request.body.email});
-      //if(user != void(0)){
-      //  ctx.status = 400;
-      //  ctx.message = "User already exist.";
-      //}else 
-        ctx.body = await User.create(ctx.request.body);
+      let userDb = await User.findOne({email: ctx.request.body.email});
+      if(userDb != void(0)){
+       ctx.status = 400;
+       ctx.message = "User already exist.";
+      }else{
+        await User.create(ctx.request.body);
+        await passport.authenticate('local', function (err, user) {
+          if (user == false) {
+            ctx.body = "Login failed";
+          } else {
+            //--payload - info to put in the JWT
+            const payload = {
+              id: user.id,
+              displayName: user.displayName,
+              email: user.email
+            };
+            const token = jwt.sign(payload, jwtsecret); //JWT is created here
+      
+            ctx.body = {user: user.displayName, token: 'JWT ' + token};
+          }
+        })(ctx, next);
+      }
     }
     catch (err) {
       ctx.status = 400;
@@ -66,7 +82,7 @@ async function createUser(ctx, next){
 async function login(ctx, next){
     await passport.authenticate('local', function (err, user) {
       if (user == false) {
-        ctx.body = "Login failed";
+        ctx.body = "Your email or password is not correct";
       } else {
         //--payload - info to put in the JWT
         const payload = {
@@ -83,7 +99,7 @@ async function login(ctx, next){
 }
 
 async function checkLogin(ctx, next){
-
+    
     await passport.authenticate('jwt', function (err, user) {
       if (user) {
         ctx.body = true;
@@ -94,5 +110,12 @@ async function checkLogin(ctx, next){
     } )(ctx, next)
 }
 
-module.exports = { createUser, login, checkLogin };
+async function logout(ctx, next){
+  ctx.body = {
+    user: null, 
+    token: null
+  };
+}
+
+module.exports = { createUser, login, checkLogin, logout };
   
